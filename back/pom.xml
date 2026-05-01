@@ -5,14 +5,14 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.5</version>
+        <version>4.0.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>kassos.K2</groupId>
-    <artifactId>agri-federation</artifactId>
+    <groupId>com.choom</groupId>
+    <artifactId>back</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>agri-federation</name>
-    <description>agri-federation</description>
+    <name>back</name>
+    <description>back</description>
     <url/>
     <licenses>
         <license/>
@@ -27,7 +27,7 @@
         <url/>
     </scm>
     <properties>
-        <java.version>21</java.version>
+        <java.version>17</java.version>
     </properties>
     <dependencies>
         <dependency>
@@ -54,10 +54,6 @@
             <groupId>io.github.cdimascio</groupId>
             <artifactId>dotenv-java</artifactId>
             <version>3.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
     </dependencies>
 
