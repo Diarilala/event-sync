@@ -1,16 +1,15 @@
-package com.choom.back.entity;
+package com.choom.back.entity.DTO;
 
 import lombok.Data;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 @Data
-public class Question {
+public class QuestionResponseDto {
     private String id;
     private String content;
     private String name;
     private Timestamp creationDate;
-    private List<Answer> answers;
     private Integer upvoteCount;
+
 }
