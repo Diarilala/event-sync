@@ -45,4 +45,12 @@ public class SessionController {
                 .status(HttpStatus.CREATED)
                 .body(createdSession);
     }
+
+    @PutMapping("{sessionId}")
+    public ResponseEntity<Session> updateSession(@PathVariable UUID id, @RequestBody Session session) {
+        Session updatedSession = sessionService.updateSession(id, session);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(updatedSession);
+    }
 }
