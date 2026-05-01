@@ -157,4 +157,52 @@ public class SessionRepository {
 
     }
 
+    public void deleteSessionById(UUID id) {
+        String query = """
+                        DELETE FROM session
+                        WHERE id = ?;
+                """;
+
+        try (Connection connection = dbConfig.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setObject(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteAllSession() {
+        String query = """
+                        DELETE FROM session
+        """;
+        try(Connection connection = dbConfig.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean existsSessionById(UUID id) {
+        String query = """
+                        SELECT COUNT(id) 
+                        FROM session
+        """;
+
+        try (Connection connection = dbConfig.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setObject(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()) {
+                return resultSet.getInt(1) > 0;
+            }
+        }catch (SQLException e) {
+            throw new  RuntimeException(e);
+        }
+        return false;
+    }
+
+
 }
