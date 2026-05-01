@@ -37,4 +37,12 @@ public class SessionController {
                 .status(HttpStatus.OK)
                 .body(sessions);
     }
+
+    @PostMapping
+    public ResponseEntity<Session> createSession(@RequestBody Session session) {
+        Session createdSession = sessionService.createSession(session);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(createdSession);
+    }
 }
