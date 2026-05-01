@@ -108,4 +108,28 @@ public class SessionRepository {
         return sessionList;
     }
 
+    public Session createSession(Session session) {
+        List<Session> sessionList = new ArrayList<>();
+        String query = """
+                INSERT INTO session (id, title, description, start_time, end_time, room_id, capacity, event_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+        """;
+
+        try(Connection connection = dbConfig.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setObject(1, session.getSessionId());
+            preparedStatement.setString(2, session.getTitle());
+            preparedStatement.setString(3, session.getDescription());
+            preparedStatement.setObject(4, session.getStartTime());
+            preparedStatement.setObject(5, session.getEndTime());
+            preparedStatement.setObject(6, session.getRoom());
+            preparedStatement.setObject(7, session.getEventId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return session;
+
+    }
+
 }
