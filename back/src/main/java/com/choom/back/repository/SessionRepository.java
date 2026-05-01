@@ -30,6 +30,7 @@ public class SessionRepository {
             PreparedStatement preparedStatement = connection.prepareStatement(query)){
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
+
                 Session session = new Session();
                 session.setSessionId((UUID) resultSet.getObject("id"));
                 session.setTitle(resultSet.getString("title"));
