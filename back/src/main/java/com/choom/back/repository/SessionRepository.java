@@ -109,7 +109,6 @@ public class SessionRepository {
     }
 
     public Session createSession(Session session) {
-        List<Session> sessionList = new ArrayList<>();
         String query = """
                 INSERT INTO session (id, title, description, start_time, end_time, room_id, capacity, event_id)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -128,6 +127,32 @@ public class SessionRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return session;
+
+    }
+
+
+    public Session updateSession(Session session) {
+        String query = """
+                UPDATE session
+                SET title = ?, description = ?, start_time = ?, end_time = ?, room_id = ?, capacity = ?, event_id = ?
+                WHERE id = ?
+        """;
+        try(Connection connection = dbConfig.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, session.getTitle());
+            preparedStatement.setString(2, session.getDescription());
+            preparedStatement.setObject(3, session.getStartTime());
+            preparedStatement.setObject(4, session.getEndTime());
+            preparedStatement.setObject(5, session.getRoom());
+            preparedStatement.setObject(6, session.getEventId());
+            preparedStatement.setObject(7, session.getSessionId());
+
+            preparedStatement.executeUpdate();
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         return session;
 
     }
