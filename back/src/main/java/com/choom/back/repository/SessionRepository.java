@@ -77,4 +77,35 @@ public class SessionRepository {
         return null;
     }
 
+    public List<Session> findSessionByEventId(UUID eventId) {
+        List<Session> sessionList = new ArrayList<>();
+        String query = """
+                SELECT id, title, description, start_time, end_time, room_id, capacity, event_id
+                FROM session
+                WHERE event_id = ?
+                ORDER BY start_time; 
+                """;
+
+        try(Connection connection = dbConfig.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setObject(1, eventId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                Session session = new Session();
+                session.setSessionId((UUID) resultSet.getObject("id"));
+                session.setTitle(resultSet.getString("title"));
+                session.setDescription(resultSet.getString("description"));
+                session.setStartTime(resultSet.getTimestamp("start_time").toLocalDateTime());
+                session.setEndTime(resultSet.getTimestamp("end_time").toLocalDateTime());
+                session.setRoom((UUID) resultSet.getObject("room_id"));
+                session.setEventId((UUID) resultSet.getObject("event_id"));
+                sessionList.add(session);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return sessionList;
+    }
+
 }
