@@ -5,12 +5,11 @@ import com.choom.back.entity.Question;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import javax.management.relation.RelationSupport;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -19,10 +18,54 @@ import java.util.UUID;
 public class QuestionRepository {
     private final DBConfig dbConfig;
 
-    public Question savaQuestion(Question question){
+    public Optional<Question> findQuestionById(UUID id){
+        String findQuestionQuery = "select id, content, author_name, creation_date,upvote_count, session_id from question where id=?";
 
-        String saveQuestionQuery = "Insert into question (id, content,author_name, creation_date, upvote_count) " +
-                "values (?, ? , ?, ?) ";
+        try(Connection connection = dbConfig.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(findQuestionQuery)) {
+            preparedStatement.setObject(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                Question question = new Question();
+                question.setId(resultSet.getObject( "id",UUID.class));
+                question.setContent(resultSet.getString("content"));
+                question.setAuthorName(resultSet.getString("author_name"));
+                question.setCreationDate(resultSet.getTimestamp("creation_date"));
+
+                return Optional.of(question);
+            }
+            return Optional.empty();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    };
+
+    public List<Question> findAllQuestion(){
+            List<Question> questions = new ArrayList<>();
+            String findAllQuery = "select id, content, author_name, creation_date,session_id from question";
+
+            try(Connection connection = dbConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(findAllQuery)){
+                ResultSet resultSet= preparedStatement.executeQuery();
+                while(resultSet.next()){
+                    Question question = new Question();
+                    question.setId(resultSet.getObject( "id",UUID.class));
+                    question.setContent(resultSet.getString("content"));
+                    question.setAuthorName(resultSet.getString("author_name"));
+                    question.setCreationDate(resultSet.getTimestamp("creation_date"));
+                    questions.add(question);
+                }
+                return questions;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+    }
+
+    public Question createQuestion(Question question){
+
+        String saveQuestionQuery = "Insert into question (id, content,author_name, creation_date, upvote_count,session_id) " +
+                "values (?, ? , ?, ?,?) ";
 
         try(Connection connection = dbConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(saveQuestionQuery)){
@@ -33,7 +76,7 @@ public class QuestionRepository {
 
             preparedStatement.setObject(1, question.getId());
             preparedStatement.setString(2, question.getContent());
-            preparedStatement.setString(3, question.getAuhtorName());
+            preparedStatement.setString(3, question.getAuthorName());
 
             Timestamp creationDate = question.getCreationDate() != null
                     ? question.getCreationDate()
@@ -43,6 +86,8 @@ public class QuestionRepository {
             preparedStatement.setInt(5, question.getUpvoteCount() != null
                     ? question.getUpvoteCount()
                     : 0);
+
+            preparedStatement.setObject(6, question.getSession());
 
             preparedStatement.executeUpdate();
             return question;

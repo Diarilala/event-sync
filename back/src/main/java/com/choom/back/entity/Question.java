@@ -10,8 +10,9 @@ import java.util.UUID;
 public class Question {
     private UUID id;
     private String content;
-    private String auhtorName;
+    private String authorName;
     private Timestamp creationDate;
     private List<Answer> answers;
     private Integer upvoteCount;
+    private Session session;
 }
