@@ -28,7 +28,7 @@ public class QuestionService {
         return optionalQuestion.get();
     }
 
-    public Question createQquestion (Question question){
+    public Question createQuestion (Question question){
         return questionRepository.createQuestion(question);
     }
 
