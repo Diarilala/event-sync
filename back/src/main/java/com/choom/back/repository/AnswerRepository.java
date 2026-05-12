@@ -2,6 +2,7 @@ package com.choom.back.repository;
 
 import com.choom.back.config.DBConfig;
 import com.choom.back.entity.Answer;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -10,12 +11,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@AllArgsConstructor
 @Repository
 public class AnswerRepository {
     DBConfig dbConfig = new DBConfig();
 
     public Optional<Answer> findAnswerById(UUID id){
-        String findAnswerQuery = "select id, content, author_name, creation_date,upvote_count, question_id from answer where id=?";
+        String findAnswerQuery = "select id, content, author_name, creation_date,upvote_count " +
+                " from answer where id=?";
 
         try(Connection connection = dbConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(findAnswerQuery)) {
@@ -36,9 +39,10 @@ public class AnswerRepository {
         }
     };
 
-    public List<Answer> findAllAnswer(){
+    public List<Answer> findAllAnswers(){
         List<Answer> answers = new ArrayList<>();
-        String findAllQuery = "select id, content, author_name, creation_date,question_id from answer";
+        String findAllQuery = "select id, content, author_name, creation_date" +
+                " from answer";
 
         try(Connection connection = dbConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(findAllQuery)){
@@ -59,7 +63,7 @@ public class AnswerRepository {
     }
     public Answer createAnswer(Answer answer){
 
-        String saveAnswerQuery = "Insert into answer (id, content,author_name, creation_date, upvote_count,question_id) " +
+        String saveAnswerQuery = "Insert into answer (id, content,author_name, creation_date, upvote_count) " +
                 "values (?, ? , ?, ?,?) ";
 
         try(Connection connection = dbConfig.getConnection();
@@ -81,8 +85,6 @@ public class AnswerRepository {
             preparedStatement.setInt(5, answer.getUpvoteCount() != null
                     ? answer.getUpvoteCount()
                     : 0);
-
-            preparedStatement.setObject(6, answer.getSession());
 
             preparedStatement.executeUpdate();
             return answer;

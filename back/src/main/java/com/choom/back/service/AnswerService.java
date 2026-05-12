@@ -3,18 +3,20 @@ package com.choom.back.service;
 import com.choom.back.entity.Answer;
 import com.choom.back.exception.NotFoundException;
 import com.choom.back.repository.AnswerRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@AllArgsConstructor
 @Service
 public class AnswerService {
-    AnswerRepository answerRepository;
+   private final AnswerRepository answerRepository;
 
     public List<Answer> getAllAnswers(){
-        return answerRepository.findAllAnswer();
+        return answerRepository.findAllAnswers();
     }
 
     public Answer getAnswerById(UUID id){
@@ -30,13 +32,5 @@ public class AnswerService {
         return answerRepository.createAnswer(answer);
     }
 
-    public Answer mapToEntity(Answer answer){
-        Answer a = new Answer();
-        a.setId(answer.getId());
-        a.setContent(answer.getContent());
-        a.setCreationDate(answer.getCreationDate());
-        a.setAuthorName(answer.getAuthorName());
 
-        return a;
-    }
 }

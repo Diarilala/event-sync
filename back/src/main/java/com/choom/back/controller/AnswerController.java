@@ -4,49 +4,43 @@ import com.choom.back.entity.Answer;
 import com.choom.back.exception.BadRequestException;
 import com.choom.back.exception.NotFoundException;
 import com.choom.back.service.AnswerService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
+
 
 @RestController
 @RequestMapping("answer")
 public class AnswerController {
-    AnswerService answerService;
+    private final AnswerService answerService;
+
+    public AnswerController(AnswerService answerService) {
+        this.answerService = answerService;
+    }
 
     @GetMapping
-    public ResponseEntity<?> getAllAnswers(){
-        try{
+    public ResponseEntity<List<Answer>> getAllAnswers(){
+
             return ResponseEntity.status(HttpStatus.OK).body(answerService.getAllAnswers());
-        }catch (BadRequestException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (NotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getQuestionById(@PathVariable UUID id){
-        try{
+
             Answer answer= answerService.getAnswerById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(answerService.getAnswerById(id));
-        }catch (BadRequestException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (NotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+            return ResponseEntity.status(HttpStatus.OK).body(answer);
+
     }
 
     @PostMapping
     public ResponseEntity<Answer> createAnswer(@RequestBody Answer answer){
 
-        Answer answerMapped = answerService.mapToEntity(answer);
-        Answer created = answerService.createAnswer(answerMapped);
+        Answer created = answerService.createAnswer(answer);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
 
