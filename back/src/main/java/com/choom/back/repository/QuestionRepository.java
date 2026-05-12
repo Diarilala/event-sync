@@ -96,6 +96,29 @@ public class QuestionRepository {
         }
     }
 
+    public void upvoteCount(UUID id){
+        String upvoteQuery = """
+        UPDATE question
+        SET upvote_count = upvote_count + 1
+        WHERE id = ?
+    """;
+        try (
+                Connection connection = dbConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(upvoteQuery)
+        ) {
+
+            preparedStatement.setObject(1, id);
+
+            int rowsUpdated = preparedStatement.executeUpdate();
+
+            if (rowsUpdated == 0) {
+                throw new RuntimeException("Question not found");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 

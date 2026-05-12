@@ -1,8 +1,6 @@
 package com.choom.back.controller;
 
 import com.choom.back.entity.Question;
-import com.choom.back.exception.BadRequestException;
-import com.choom.back.exception.NotFoundException;
 import com.choom.back.service.QuestionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,6 +32,14 @@ public class QuestionController {
         Question created = questionServices.createQuestion(question);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PutMapping("/question/{id}/upvote")
+    public ResponseEntity<String> upvote(
+            @PathVariable UUID id
+    ){
+        questionServices.upvoteQuestion(id);
+        return ResponseEntity.ok("Upvote added");
     }
 
 

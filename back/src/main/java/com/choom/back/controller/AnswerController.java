@@ -4,6 +4,7 @@ import com.choom.back.entity.Answer;
 import com.choom.back.exception.BadRequestException;
 import com.choom.back.exception.NotFoundException;
 import com.choom.back.service.AnswerService;
+import com.choom.back.service.QuestionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,10 @@ import java.util.UUID;
 public class AnswerController {
     private final AnswerService answerService;
 
+
     public AnswerController(AnswerService answerService) {
         this.answerService = answerService;
+
     }
 
     @GetMapping
@@ -45,4 +48,7 @@ public class AnswerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
 
     }
+
+
+
 }

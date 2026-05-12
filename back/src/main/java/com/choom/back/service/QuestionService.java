@@ -33,5 +33,8 @@ public class QuestionService {
         return questionRepository.createQuestion(question);
     }
 
+    public void upvoteQuestion(UUID questionId) {
+        questionRepository.upvoteCount(questionId);
+    }
 }
 
