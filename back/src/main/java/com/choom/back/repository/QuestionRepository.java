@@ -5,7 +5,6 @@ import com.choom.back.entity.Question;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import javax.management.relation.RelationSupport;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ public class QuestionRepository {
     private final DBConfig dbConfig;
 
     public Optional<Question> findQuestionById(UUID id){
-        String findQuestionQuery = "select id, content, author_name, creation_date,upvote_count, session_id from question where id=?";
+        String findQuestionQuery = "select id, content, author_name, creation_date,upvote_count from question where id=?";
 
         try(Connection connection = dbConfig.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(findQuestionQuery)) {
@@ -31,6 +30,7 @@ public class QuestionRepository {
                 question.setContent(resultSet.getString("content"));
                 question.setAuthorName(resultSet.getString("author_name"));
                 question.setCreationDate(resultSet.getTimestamp("creation_date"));
+                question.setUpvoteCount(resultSet.getInt("upvote_count"));
 
                 return Optional.of(question);
             }
@@ -42,7 +42,7 @@ public class QuestionRepository {
 
     public List<Question> findAllQuestion(){
             List<Question> questions = new ArrayList<>();
-            String findAllQuery = "select id, content, author_name, creation_date,session_id from question";
+            String findAllQuery = "select id, content, author_name, creation_date,upvote_count from question";
 
             try(Connection connection = dbConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(findAllQuery)){
@@ -53,6 +53,7 @@ public class QuestionRepository {
                     question.setContent(resultSet.getString("content"));
                     question.setAuthorName(resultSet.getString("author_name"));
                     question.setCreationDate(resultSet.getTimestamp("creation_date"));
+                    question.setUpvoteCount(resultSet.getInt("upvote_count"));
                     questions.add(question);
                 }
                 return questions;
@@ -64,7 +65,7 @@ public class QuestionRepository {
 
     public Question createQuestion(Question question){
 
-        String saveQuestionQuery = "Insert into question (id, content,author_name, creation_date, upvote_count,session_id) " +
+        String saveQuestionQuery = "Insert into question (id, content,author_name, creation_date, upvote_count) " +
                 "values (?, ? , ?, ?,?) ";
 
         try(Connection connection = dbConfig.getConnection();
@@ -87,8 +88,6 @@ public class QuestionRepository {
                     ? question.getUpvoteCount()
                     : 0);
 
-            preparedStatement.setObject(6, question.getSession());
-
             preparedStatement.executeUpdate();
             return question;
 
@@ -96,5 +95,8 @@ public class QuestionRepository {
             throw new RuntimeException("error saving question",e);
         }
     }
+
+
+
 
 }

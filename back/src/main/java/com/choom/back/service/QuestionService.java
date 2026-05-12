@@ -32,14 +32,5 @@ public class QuestionService {
         return questionRepository.createQuestion(question);
     }
 
-    public Question mapToEntity(Question question){
-        Question q = new Question();
-        q.setId(question.getId());
-        q.setContent(question.getContent());
-        q.setCreationDate(question.getCreationDate());
-        q.setAuthorName(question.getAuthorName());
-
-        return q;
-    }
 }
 
