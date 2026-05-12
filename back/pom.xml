@@ -34,6 +34,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -60,6 +61,7 @@
             <artifactId>spring-security-crypto</artifactId>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
